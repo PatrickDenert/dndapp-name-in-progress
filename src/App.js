@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import axios from "axios";
-import logo from './logo.svg';
 import './App.css';
+import ResponsiveAppBar from './navbar.js';
+import { Route, Routes } from 'react-router-dom';
+import Home from './Home.js'
+import About from './About.js'
+import Login from './login.js'
+import Register from './Register.js';
 
 function App() {
 
@@ -25,24 +30,18 @@ function App() {
         console.log(error.response.headers)
         }
     })}
-    //end of new line 
+    //end of new line
 
   return (
     <div className="App">
+      <ResponsiveAppBar></ResponsiveAppBar>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
         {/* new line start*/}
         <p>To get your profile details: </p><button onClick={getData}>Click me</button>
         {profileData && <div>
