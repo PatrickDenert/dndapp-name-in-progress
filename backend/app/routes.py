@@ -2,6 +2,7 @@ from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
 from app.models import User
 from app import api,db,bcrypt
+from flask_login import login_user, current_user
 
 @api.route('/profile')
 def my_profile():
@@ -38,8 +39,13 @@ def register():
 def login():
     login = request.get_json()
     check_user = User(username=login['username'],password=login['password'])
-    query = db.session.query(User).filter(User.username==check_user.username, User.password==check_user.password)
-    for result in query:
-        return jsonify(result.as_dict()),201
 
-    return "Account Does Not Exist",404
+    #query = db.session.query(User).filter(User.username==check_user.username, User.password==check_user.password)
+    exists = db.session.query(User).filter(User.username==check_user.username).first()
+    #print(exists)
+
+    if exists and bcrypt.check_password_hash(exists.password, check_user.password):
+        login_user(exists, remember=False)
+        return "Account Exists", 201
+    else:
+        return "Account Does Not Exist",404

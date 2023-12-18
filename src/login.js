@@ -34,7 +34,7 @@ return (
 <form onSubmit={(e) => handleSubmit(e)}>
     <TextField fullWidth label="Username" onChange={(e) => handle(e)} id='username' value={data.username}/>
     <TextField fullWidth label="Password" onChange={(e) => handle(e)} id='password' value={data.password}/>
-    <Button type='submit' variant='contained'>Register</Button>
+    <Button type='submit' variant='contained'>Log In</Button>
 </form>
 </div>
 
