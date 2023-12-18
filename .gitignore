@@ -26,3 +26,5 @@ backend/env
 backend/__pycache__
 
 .flaskenv
+
+backend/instance/test.db
