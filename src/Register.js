@@ -1,5 +1,5 @@
 import { Button, TextField } from '@mui/material'
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 import React, { useState } from 'react'
 
 const Register = () => {
