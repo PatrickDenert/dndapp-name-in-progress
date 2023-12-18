@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, TextField } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 
@@ -16,6 +16,8 @@ const Register = () => {
         setData(newdata)
         //console.log(newdata)
     }
+    const [err, setErr] = useState([])
+    const [success, setSuccess] = useState([])
 
     function handleSubmit(e){
         e.preventDefault();
@@ -26,24 +28,41 @@ const Register = () => {
                 password: data.password
             }).then(response=>{
                 console.log(response.data)
+                setSuccess("Success")
+                setErr("");
             }).catch((error) => {
                 if (error.response) {
                   console.log(error.response)
-                  console.log(error.response.status)
-                  console.log(error.response.headers)
+                  setErr(error.response.data);
+                  console.log(err)
+                  setSuccess("")
                   }
-              })}
+              })
+            }
         else {
-            alert("Passwords do not match");
+            setErr("Passwords do not match");
+            console.log(err)
         }
     }
   return (
     <div><h1>Register</h1>
     <form onSubmit={(e) => handleSubmit(e)}>
-        <TextField fullWidth label="Username" onChange={(e) => handle(e)} id='username' value={data.username}/>
-        <TextField fullWidth label="Email" onChange={(e) => handle(e)} id='email' value={data.email}/>
-        <TextField fullWidth label="Password" onChange={(e) => handle(e)} id='password' value={data.password}/>
-        <TextField fullWidth label="Confirm Password" onChange={(e) => handle(e)} id='password_confirm' value={data.password_confirm}/>
+        {err.length > 0 &&
+            <Alert severity='error'>
+                <AlertTitle>{err}</AlertTitle>
+            </Alert>
+        }
+
+        {success.length > 0 &&
+            <Alert severity='success'>
+                <AlertTitle>Account Created Successfully</AlertTitle>
+            </Alert>
+        }
+
+        <TextField error={err === "Email is taken" | err === "Account Exists"} fullWidth label="Email" onChange={(e) => handle(e)} id='email' value={data.email}/>
+        <TextField error={err === "Username is taken" | err === "Account Exists"} fullWidth label="Username" onChange={(e) => handle(e)} id='username' value={data.username}/>
+        <TextField fullWidth type="password" label="Password" onChange={(e) => handle(e)} id='password' value={data.password} />
+        <TextField error={err === "Passwords do not match"} fullWidth type="password" label="Confirm Password" onChange={(e) => handle(e)} id='password_confirm' value={data.password_confirm}/>
         <Button type='submit' variant='contained'>Register</Button>
     </form>
     </div>

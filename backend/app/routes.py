@@ -1,6 +1,7 @@
 from flask import request, jsonify
+from sqlalchemy.exc import IntegrityError
 from app.models import User
-from app import api,db
+from app import api,db,bcrypt
 
 @api.route('/profile')
 def my_profile():
@@ -16,10 +17,22 @@ def register():
     user = request.get_json()
     new_user = User(username=user['username'],email=user['email'],password=user['password'])
     print(new_user)
-    db.session.add(new_user)
-    db.session.commit()
 
-    return "Done",201
+    hashed_password = bcrypt.generate_password_hash(new_user.password).decode('utf-8')                  #hash password
+    new_user.password = hashed_password
+
+    if db.session.query(User).filter(User.username==new_user.username).first() != None:                                 #check if username and email exist
+        if db.session.query(User).filter(User.email==new_user.email).first() != None:
+            return "Account Exists",500
+        else:
+            return "Username is taken",500
+
+    elif db.session.query(User).filter(User.email==new_user.email).first() != None:
+        return "Email is taken",500
+    else:
+        db.session.add(new_user)
+        db.session.commit()
+        return "Account Creation Success",201
 
 @api.route('/login', methods=["POST"])
 def login():
