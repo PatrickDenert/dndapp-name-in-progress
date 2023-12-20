@@ -15,10 +15,13 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { NavLink } from 'react-router-dom';
 import { GlobalStyles } from '@mui/material';
 
-const pages = ['Home', 'About', 'Login', 'Register'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function ResponsiveAppBar() {
+
+
+function ResponsiveAppBar(props) {
+  let pages = !props.token && props.token!=="" &&props.token!== undefined ? ['Home', 'About', 'Login', 'Register'] : ['Home', 'About', 'Account'];
+
+  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 

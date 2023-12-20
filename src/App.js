@@ -7,11 +7,15 @@ import Home from './Home.js'
 import About from './About.js'
 import Login from './login.js'
 import Register from './Register.js';
+import Header from './Header.js';
+import Profile from './Profile.js';
+import useToken from './useToken.js';
 
 function App() {
 
    // new line start
   const [profileData, setProfileData] = useState(null)
+  const { token, removeToken, setToken } = useToken();
 
   function getData() {
     axios({
@@ -34,13 +38,15 @@ function App() {
 
   return (
     <div className="App">
-      <ResponsiveAppBar></ResponsiveAppBar>
+      <ResponsiveAppBar token={token} />
+      <Header token={removeToken}/>
       <header className="App-header">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setToken={setToken}/>} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile token={token} setToken={setToken}/>}/>
         </Routes>
         {/* new line start*/}
         <p>To get your profile details: </p><button onClick={getData}>Click me</button>

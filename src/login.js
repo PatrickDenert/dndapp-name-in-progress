@@ -2,7 +2,7 @@ import { Button, TextField } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 
-const Login = () => {
+const Login = (props) => {
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -21,7 +21,8 @@ function handleSubmit(e){
             username: data.username,
             password: data.password
         }).then(response=>{
-            console.log(response.data)
+            console.log(response)
+            props.setToken(response.data.access_token)
         }).catch((error) => {
             if (error.response) {
               console.log(error.response)

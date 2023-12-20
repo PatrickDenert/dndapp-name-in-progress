@@ -1,10 +1,14 @@
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
 from app.models import User
-from app import api,db,bcrypt
+from app import api,db,bcrypt, jwt
 from flask_login import login_user, current_user
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required
+from datetime import datetime,timezone,timedelta
+import json
 
 @api.route('/profile')
+@jwt_required()
 def my_profile():
     response_body = {
         "name": "Patrick",
@@ -45,7 +49,36 @@ def login():
     #print(exists)
 
     if exists and bcrypt.check_password_hash(exists.password, check_user.password):
-        login_user(exists, remember=False)
-        return "Account Exists", 201
+        #login_user(exists, remember=False)
+        access_token = create_access_token(identity=exists.username)
+        print("generated token")
+        return jsonify({
+            'access_token':access_token
+        }), 201
     else:
-        return "Account Does Not Exist",404
+        return jsonify({
+            'message': "Account Does Not Exist"
+        }), 401
+
+@api.route('/logout',methods=["POST"])
+def logout():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
+@api.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            data = response.get_json()
+            if type(data) is dict:
+                data["access_token"] = access_token
+                response.data = json.dumps(data)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
