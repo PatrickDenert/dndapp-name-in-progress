@@ -1,8 +1,10 @@
 
+import { Button } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Header(props) {
-
+  const navigate = useNavigate()
   function logMeOut() {
     axios({
       method: "POST",
@@ -10,6 +12,7 @@ function Header(props) {
     })
     .then((response) => {
        props.token()
+       navigate("/")
     }).catch((error) => {
       if (error.response) {
         console.log(error.response)
@@ -19,11 +22,9 @@ function Header(props) {
     })}
 
     return(
-        <header className="App-header">
-            <button onClick={logMeOut}>
+            <Button onClick={logMeOut} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Logout
-            </button>
-        </header>
+            </Button>
     )
 }
 

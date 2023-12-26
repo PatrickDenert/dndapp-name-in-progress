@@ -17,6 +17,7 @@ function Profile(props) {
       res.access_token && props.setToken(res.access_token)
       setProfileData(({
         profile_name: res.name,
+        email: res.email,
         about_me: res.about}))
     }).catch((error) => {
       if (error.response) {
@@ -32,6 +33,7 @@ function Profile(props) {
         <p>To get your profile details: </p><button onClick={getData}>Click me</button>
         {profileData && <div>
               <p>Profile name: {profileData.profile_name}</p>
+              <p>Email: {profileData.email} </p>
               <p>About me: {profileData.about_me}</p>
             </div>
         }

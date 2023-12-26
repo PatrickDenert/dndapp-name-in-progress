@@ -10,9 +10,12 @@ import json
 @api.route('/profile')
 @jwt_required()
 def my_profile():
+    username = get_jwt_identity()
+    user = db.session.query(User).filter(User.username==username).first()
     response_body = {
-        "name": "Patrick",
-        "about" :"Hello! I'm a full stack developer that loves python and javascript"
+        "name": user.username,
+        "about" :"Hello! I'm a full stack developer that loves python and javascript",
+        "email": user.email,
     }
 
     return response_body
@@ -47,6 +50,10 @@ def login():
     #query = db.session.query(User).filter(User.username==check_user.username, User.password==check_user.password)
     exists = db.session.query(User).filter(User.username==check_user.username).first()
     #print(exists)
+    if not exists:
+        return jsonify({
+            'message': "Account Does Not Exist"
+        }), 401
 
     if exists and bcrypt.check_password_hash(exists.password, check_user.password):
         #login_user(exists, remember=False)
@@ -57,7 +64,7 @@ def login():
         }), 201
     else:
         return jsonify({
-            'message': "Account Does Not Exist"
+            'message': "Incorrect Password"
         }), 401
 
 @api.route('/logout',methods=["POST"])

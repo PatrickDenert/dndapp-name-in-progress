@@ -14,12 +14,13 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { NavLink } from 'react-router-dom';
 import { GlobalStyles } from '@mui/material';
+import Header from './Header';
 
 
 
 
 function ResponsiveAppBar(props) {
-  let pages = !props.token && props.token!=="" &&props.token!== undefined ? ['Home', 'About', 'Login', 'Register'] : ['Home', 'About', 'Account'];
+  let pages = !props.token && props.token!=="" &&props.token!== undefined ? ['Home', 'About', 'Login', 'Register'] : ['Home', 'About', 'Profile'];
 
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -129,8 +130,10 @@ function ResponsiveAppBar(props) {
               </Button>
               </NavLink>
             ))}
+            {!props.token && props.token!=="" &&props.token!== undefined ? <></> : <Header token={props.rToken} />}
           </Box>
 
+          {!props.token && props.token!=="" &&props.token!== undefined ? <></> :
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -160,6 +163,7 @@ function ResponsiveAppBar(props) {
               ))}
             </Menu>
           </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>

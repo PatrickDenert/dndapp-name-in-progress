@@ -38,8 +38,7 @@ function App() {
 
   return (
     <div className="App">
-      <ResponsiveAppBar token={token} />
-      <Header token={removeToken}/>
+      <ResponsiveAppBar token={token} rToken={removeToken}/>
       <header className="App-header">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -48,14 +47,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile token={token} setToken={setToken}/>}/>
         </Routes>
-        {/* new line start*/}
-        <p>To get your profile details: </p><button onClick={getData}>Click me</button>
-        {profileData && <div>
-              <p>Profile name: {profileData.profile_name}</p>
-              <p>About me: {profileData.about_me}</p>
-            </div>
-        }
-         {/* end of new line */}
       </header>
     </div>
   );
